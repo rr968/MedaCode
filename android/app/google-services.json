@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "1065950415445",
+    "project_id": "meda-16202",
+    "storage_bucket": "meda-16202.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065950415445:android:3786dae05d64be1a0362dc",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnI8fSCAGt-6x8AGzbMCgo0C6-JMmJW_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065950415445:android:332f7a3c19b945e80362dc",
+        "android_client_info": {
+          "package_name": "com.example.finaltest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnI8fSCAGt-6x8AGzbMCgo0C6-JMmJW_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065950415445:android:0bfb0e5e6fe8e2c80362dc",
+        "android_client_info": {
+          "package_name": "com.meda.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnI8fSCAGt-6x8AGzbMCgo0C6-JMmJW_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
