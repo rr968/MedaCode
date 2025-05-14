@@ -91,7 +91,7 @@ class _MainMerchantPageState extends State<MainMerchantPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const MarchantShop(isEditing: false)));
+                              const MarchantShop(isEditing: false, globalIndex: 0, globalSubIndex: 0)));
                 },
                 child: Container(
                   height: 45,

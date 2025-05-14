@@ -21,7 +21,14 @@ import '../../../model/store_item.dart';
 
 class MarchantShop extends StatefulWidget {
   final bool isEditing;
-  const MarchantShop({super.key, required this.isEditing});
+  final int globalIndex;
+  final int globalSubIndex;
+  const MarchantShop({
+    super.key,
+    required this.isEditing,
+    required this.globalIndex,
+    required this.globalSubIndex,
+  });
 
   @override
   State<MarchantShop> createState() => _MarchantShopState();
@@ -44,6 +51,11 @@ class _MarchantShopState extends State<MarchantShop> {
 
   @override
   void initState() {
+    if (widget.isEditing) {
+      currentCatIndex = widget.globalIndex;
+      currentSubCatIndex = widget.globalSubIndex;
+    }
+
     getDiscountActive();
     getdata();
     getStoreData();
@@ -511,7 +523,10 @@ class _MarchantShopState extends State<MarchantShop> {
                                                                       context,
                                                                     ) => const MarchantShop(
                                                                       isEditing:
-                                                                          true,
+                                                                          true, globalIndex: 0,
+                                                                          globalSubIndex: 0,
+                                                                          
+
                                                                     ),
                                                               ),
                                                             );
@@ -1062,9 +1077,11 @@ class _MarchantShopState extends State<MarchantShop> {
                                                         MaterialPageRoute(
                                                           builder:
                                                               (context) =>
-                                                                  const MarchantShop(
+                                                                    MarchantShop(
                                                                     isEditing:
                                                                         true,
+                                                                        globalIndex: currentCatIndex,
+                                                                          globalSubIndex: subIndex,
                                                                   ),
                                                         ),
                                                       );
@@ -1183,7 +1200,7 @@ class _MarchantShopState extends State<MarchantShop> {
                               MaterialPageRoute(
                                 builder:
                                     (context) =>
-                                        const MarchantShop(isEditing: true),
+                                          MarchantShop(isEditing: true, globalIndex: currentCatIndex,globalSubIndex: subIndex,),
                               ),
                             );
                             snackBar(context, "تم التعديل بنجاح");
@@ -1265,7 +1282,7 @@ class _MarchantShopState extends State<MarchantShop> {
                                   MaterialPageRoute(
                                     builder:
                                         (context) =>
-                                            const MarchantShop(isEditing: true),
+                                              MarchantShop(isEditing: true, globalIndex: currentCatIndex,globalSubIndex: subIndex),
                                   ),
                                 );
                                 snackBar(context, "تم الاضافة بنجاح");
@@ -1591,7 +1608,7 @@ class _MarchantShopState extends State<MarchantShop> {
                                 MaterialPageRoute(
                                   builder:
                                       (context) =>
-                                          const MarchantShop(isEditing: true),
+                                          const MarchantShop(isEditing: true, globalIndex: 0,globalSubIndex: 0),
                                 ),
                               );
                               snackBar(context, "تم التعديل بنجاح");
@@ -1774,7 +1791,7 @@ class _MarchantShopState extends State<MarchantShop> {
                               MaterialPageRoute(
                                 builder:
                                     (context) =>
-                                        const MarchantShop(isEditing: true),
+                                          MarchantShop(isEditing: true, globalIndex: currentCatIndex,globalSubIndex: subIndex),
                               ),
                             );
                             snackBar(context, "تم التعديل بنجاح");
