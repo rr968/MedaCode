@@ -246,6 +246,13 @@ class _MyChatsState extends State<MyChats> {
                           ? Center(
                             child: CircularProgressIndicator(color: orange),
                           )
+                          : myChats.isEmpty
+                          ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 100),
+                              child: Text(getText("message24")),
+                            ),
+                          )
                           : Column(
                             children: [
                               Expanded(
