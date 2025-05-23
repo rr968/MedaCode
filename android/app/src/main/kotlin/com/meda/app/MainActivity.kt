@@ -1,4 +1,4 @@
-package com.example.finaltest
+package com.meda.app
 
 import io.flutter.embedding.android.FlutterActivity
 
