@@ -56,93 +56,92 @@ class _LoginState extends State<Login> {
               Expanded(child: Container()),
               Text(
                 getText("SignIn"),
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
-              const SizedBox(
-                height: 5,
-              ),
+              const SizedBox(height: 5),
               Text(
                 getText("WBack"),
                 style: const TextStyle(
-                    color: Color.fromARGB(255, 131, 131, 131), fontSize: 13),
+                  color: Color.fromARGB(255, 131, 131, 131),
+                  fontSize: 13,
+                ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
+              const SizedBox(height: 15),
               TextField(
                 controller: mobileNumber,
                 decoration: InputDecoration(
-                    hintText: getText("MobileNumber"),
-                    hintStyle:
-                        const TextStyle(color: Colors.grey, fontSize: 11),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5)),
+                  hintText: getText("MobileNumber"),
+                  hintStyle: const TextStyle(color: Colors.grey, fontSize: 11),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               TextField(
                 controller: password,
                 obscureText: passwordVisibillity,
                 decoration: InputDecoration(
-                    suffixIcon: InkWell(
-                      onTap: () {
-                        setState(() {
-                          passwordVisibillity = !passwordVisibillity;
-                        });
-                      },
-                      child: passwordVisibillity
-                          ? const Icon(Icons.visibility_off)
-                          : const Icon(Icons.visibility),
-                    ),
-                    hintText: getText("Password"),
-                    hintStyle:
-                        const TextStyle(color: Colors.grey, fontSize: 11),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5)),
+                  suffixIcon: InkWell(
+                    onTap: () {
+                      setState(() {
+                        passwordVisibillity = !passwordVisibillity;
+                      });
+                    },
+                    child:
+                        passwordVisibillity
+                            ? const Icon(Icons.visibility_off)
+                            : const Icon(Icons.visibility),
+                  ),
+                  hintText: getText("Password"),
+                  hintStyle: const TextStyle(color: Colors.grey, fontSize: 11),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                ),
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
                       Checkbox(
-                          value: checkBox,
-                          checkColor: Colors.white,
-                          activeColor: orange,
-                          onChanged: (value) {
-                            setState(() {
-                              checkBox = value!;
-                            });
-                          }),
+                        value: checkBox,
+                        checkColor: Colors.white,
+                        activeColor: orange,
+                        onChanged: (value) {
+                          setState(() {
+                            checkBox = value!;
+                          });
+                        },
+                      ),
                       Text(
                         getText("RememberMe"),
                         style: const TextStyle(fontSize: 12),
-                      )
+                      ),
                     ],
                   ),
                   InkWell(
                     onTap: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ForgetPassword()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgetPassword(),
+                        ),
+                      );
                     },
                     child: Text(
                       getText("ForgetPassword"),
                       style: TextStyle(
-                          color: orange,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10),
+                        color: orange,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               InkWell(
                 onTap: () {
                   login(mobileNumber.text, password.text);
@@ -151,21 +150,27 @@ class _LoginState extends State<Login> {
                   height: 35,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: orange, borderRadius: BorderRadius.circular(5)),
+                    color: orange,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
                   child: Center(
-                    child: isLoading
-                        ? const CircularProgressIndicator()
-                        : Text(
-                            getText("Login"),
-                            style: const TextStyle(
+                    child:
+                        isLoading
+                            ? const CircularProgressIndicator()
+                            : Text(
+                              getText("Login"),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14),
-                          ),
+                                fontSize: 14,
+                              ),
+                            ),
                   ),
                 ),
               ),
               Expanded(child: Container()),
+
+              //token.trim().isEmpty ?
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -176,23 +181,44 @@ class _LoginState extends State<Login> {
                   InkWell(
                     onTap: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignUp()));
+                        context,
+                        MaterialPageRoute(builder: (context) => const SignUp()),
+                      );
                     },
                     child: Text(
                       getText("SignUp"),
                       style: TextStyle(
-                          color: orange,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12),
+                        color: orange,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 30,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      userName = getText("Guest");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainPage(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      getText("orcontinueWithoutLogin"),
+
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ],
               ),
+
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -209,9 +235,11 @@ class _LoginState extends State<Login> {
       });
       var headers = {'Cookie': 'PHPSESSID=rsb4c0bf33us53ekrkeku6q2ln'};
       var request = http.Request(
-          'GET',
-          Uri.parse(
-              '$baseUrl/login.php?input_key=$input_key&input_secret=$input_secret&phone=$mobile&password=$password'));
+        'GET',
+        Uri.parse(
+          '$baseUrl/login.php?input_key=$input_key&input_secret=$input_secret&phone=$mobile&password=$password',
+        ),
+      );
 
       request.headers.addAll(headers);
 
@@ -241,9 +269,10 @@ class _LoginState extends State<Login> {
 
           setUserName(data["user"]["name"]).then((v) {
             Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const MainPage()),
-                (route) => false);
+              context,
+              MaterialPageRoute(builder: (context) => const MainPage()),
+              (route) => false,
+            );
           });
         } else {
           setState(() {

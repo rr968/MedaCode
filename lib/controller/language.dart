@@ -79,6 +79,7 @@ Map words = {
     "تم رفض طلبك، اتصل بالدعم",
   ],
   "message11": ["Welcome back to Meda,", "مرحبا بكم مرة أخرى في ميدة"],
+  "Guest": ["Guest", "زائر"],
   "Points": ["Points", "النقاط"],
   "PointsBalance": ["Points Balance", "رصيد النقاط"],
   "Categories": ["Categories", "الفئات"],
@@ -335,6 +336,10 @@ Map words = {
   "OrderNo": ["Order No#", "رقم الطلب#"],
   "comReg": ["Commercial register :", "السجل التجاري :"],
   "UnitPrice": ["Unit Price", "سعر الوحدة"],
+  "orcontinueWithoutLogin": [
+    "or continue without login",
+    "أو المتابعة بدون تسجيل الدخول",
+  ],
 };
 String getText(String key) {
   String t = "";

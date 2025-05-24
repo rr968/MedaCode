@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:finaltest/controller/note_alert.dart';
+
 import '/controller/language.dart';
 import '/controller/version_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -30,10 +32,7 @@ class _MainPageState extends State<MainPage> {
   List<Widget> screens = [
     const HomePage(),
     const Wallet(),
-    MyChats(
-      isUser: true,
-      openLastChat: false,
-    ),
+    MyChats(isUser: true, openLastChat: false),
     const Profile(),
   ];
   @override
@@ -49,9 +48,11 @@ class _MainPageState extends State<MainPage> {
     var headers = {'Cookie': 'PHPSESSID=pkjgl6qfq25j4hvhl359mma1ej'};
     try {
       var request = http.Request(
-          'GET',
-          Uri.parse(
-              '$baseUrl/app_version.php?input_key=$input_key&input_secret=$input_secret'));
+        'GET',
+        Uri.parse(
+          '$baseUrl/app_version.php?input_key=$input_key&input_secret=$input_secret',
+        ),
+      );
 
       request.headers.addAll(headers);
 
@@ -96,10 +97,13 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: language == "0" ? TextDirection.ltr : TextDirection.rtl,
-      child: Scaffold(
-          backgroundColor: currentPageNumber == 1
-              ? const Color.fromARGB(255, 245, 245, 245)
-              : Colors.white,
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          backgroundColor:
+              currentPageNumber == 1
+                  ? const Color.fromARGB(255, 245, 245, 245)
+                  : Colors.white,
           bottomNavigationBar: Stack(
             alignment: Alignment.topCenter,
             children: [
@@ -107,13 +111,12 @@ class _MainPageState extends State<MainPage> {
                 height: Platform.isIOS ? 120 : 70,
                 child: Column(
                   children: [
-                    Container(
-                      height: 21,
-                    ),
+                    Container(height: 21),
                     Container(
                       height: 49,
                       decoration: BoxDecoration(
-                          border: Border(top: BorderSide(color: greyc))),
+                        border: Border(top: BorderSide(color: greyc)),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(3),
                         child: Row(
@@ -121,13 +124,7 @@ class _MainPageState extends State<MainPage> {
                           children: [
                             bottomItem(getText("Main"), 1),
                             bottomItem(getText("Wallet"), 2),
-                            const Column(
-                              children: [
-                                Text(
-                                  "          ",
-                                ),
-                              ],
-                            ),
+                            const Column(children: [Text("          ")]),
                             bottomItem(getText("Chats"), 3),
                             bottomItem(getText("More"), 4),
                           ],
@@ -139,9 +136,13 @@ class _MainPageState extends State<MainPage> {
               ),
               InkWell(
                 onTap: () {
-                  setState(() {
-                    isPressed = !isPressed;
-                  });
+                  if (token.trim().isEmpty) {
+                    showSignInDialog(context);
+                  } else {
+                    setState(() {
+                      isPressed = !isPressed;
+                    });
+                  }
                 },
                 child: Image.asset(
                   isPressed ? "assets/pressed.png" : "assets/notPressed.png",
@@ -155,98 +156,115 @@ class _MainPageState extends State<MainPage> {
               screens[currentPageNumber - 1],
               isPressed
                   ? Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 3),
-                        child: Stack(
-                          children: [
-                            Image.asset(
-                              "assets/bar.png",
-                              height: 50,
-                            ),
-                            SizedBox(
-                              height: 30,
-                              width: 210,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 7, right: 7, top: 7),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 3),
+                      child: Stack(
+                        children: [
+                          Image.asset("assets/bar.png", height: 50),
+                          SizedBox(
+                            height: 30,
+                            width: 210,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 7,
+                                right: 7,
+                                top: 7,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      if (token.trim().isEmpty) {
+                                        showSignInDialog(context);
+                                      } else {
                                         Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const MainCategories()));
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                            "assets/createOrder.png",
-                                            height: 22,
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) =>
+                                                    const MainCategories(),
                                           ),
-                                          Container(
-                                            width: 4,
-                                          ),
-                                          Text(
-                                            getText("Createorder"),
-                                            style: const TextStyle(
-                                                fontSize: 11,
-                                                color: Colors.white),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const UserOrders()));
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                            "assets/clipboard-list.png",
+                                        );
+                                      }
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          "assets/createOrder.png",
+                                          height: 22,
+                                        ),
+                                        Container(width: 4),
+                                        Text(
+                                          getText("Createorder"),
+                                          style: const TextStyle(
+                                            fontSize: 11,
                                             color: Colors.white,
-                                            height: 18,
                                           ),
-                                          Container(
-                                            width: 4,
-                                          ),
-                                          Text(
-                                            getText("Myorders"),
-                                            style: const TextStyle(
-                                                fontSize: 11,
-                                                color: Colors.white),
-                                          )
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      if (token.trim().isEmpty) {
+                                        showSignInDialog(context);
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => const UserOrders(),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          "assets/clipboard-list.png",
+                                          color: Colors.white,
+                                          height: 18,
+                                        ),
+                                        Container(width: 4),
+                                        Text(
+                                          getText("Myorders"),
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    )
+                    ),
+                  )
                   : Container(),
             ],
-          )),
+          ),
+        ),
+      ),
     );
   }
 
   Widget bottomItem(text, pageNumber) {
     return InkWell(
       onTap: () {
-        setState(() {
-          currentPageNumber = pageNumber;
-        });
+        if (token.trim().isEmpty) {
+          showSignInDialog(context);
+        } else {
+          setState(() {
+            currentPageNumber = pageNumber;
+          });
+        }
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -256,10 +274,7 @@ class _MainPageState extends State<MainPage> {
             height: pageNumber == 1 ? 21 : 20,
             color: currentPageNumber == pageNumber ? orange : Colors.black,
           ),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 10),
-          ),
+          Text(text, style: const TextStyle(fontSize: 10)),
         ],
       ),
     );
