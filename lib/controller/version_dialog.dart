@@ -3,9 +3,10 @@
 import 'dart:developer';
 import 'dart:io';
 
-import '/controller/var.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '/controller/var.dart';
 
 void showUpdateDialog(BuildContext context) {
   showDialog(
@@ -15,13 +16,15 @@ void showUpdateDialog(BuildContext context) {
       return AlertDialog(
         title: const Text("Update Required"),
         content: const Text(
-            "The app is closed for maintenance. Please update to continue."),
+          "The app is closed for maintenance. Please update to continue.",
+        ),
         actions: [
           ElevatedButton(
             onPressed: () async {
-              String url = Platform.isAndroid
-                  ? "https://play.google.com/store/apps/details?id=com.example.yourapp"
-                  : "https://apps.apple.com/app/id123456789"; // Replace with your app ID
+              String url =
+                  Platform.isAndroid
+                      ? "https://play.google.com/store/apps/details?id=com.meda.app"
+                      : "https://apps.apple.com/app/id123456789"; // Replace with your app ID
 
               final Uri uri = Uri.parse(url);
               if (await canLaunchUrl(uri)) {
@@ -31,8 +34,10 @@ void showUpdateDialog(BuildContext context) {
               }
             },
             style: ElevatedButton.styleFrom(backgroundColor: orange),
-            child:
-                const Text("Update Now", style: TextStyle(color: Colors.white)),
+            child: const Text(
+              "Update Now",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       );
