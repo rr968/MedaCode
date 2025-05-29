@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import '/model/wallet_charge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+
+import '/model/wallet_charge.dart';
 import '../../controller/language.dart';
 import '../../controller/no_imternet.dart';
 import '../../controller/provider.dart';
@@ -37,9 +38,11 @@ class _WalletBillsState extends State<WalletBills> {
     String userId = await getUserId();
     var headers = {'Cookie': 'PHPSESSID=1ljp80udb4p4rbib2mgqomsue8'};
     var request = http.Request(
-        'GET',
-        Uri.parse(
-            '$baseUrl/sadad_status.php?input_key=$input_key&input_secret=$input_secret&user_id=$userId'));
+      'GET',
+      Uri.parse(
+        '$baseUrl/sadad_status.php?input_key=$input_key&input_secret=$input_secret&user_id=$userId',
+      ),
+    );
 
     request.headers.addAll(headers);
 
@@ -51,7 +54,8 @@ class _WalletBillsState extends State<WalletBills> {
         List res = json.decode(await response.stream.bytesToString())["data"];
         log(res.toString());
         for (var e in res) {
-          data.add(WalletCharge(
+          data.add(
+            WalletCharge(
               user_id: e["user_id"].toString(),
               bill_number: e["bill_number"].toString(),
               saddad_number: e["saddad_number"].toString(),
@@ -60,7 +64,9 @@ class _WalletBillsState extends State<WalletBills> {
               date_of_expiration: e["date_of_expiration"].toString(),
               status: e["status"].toString(),
               status_description: e["status_description"].toString(),
-              status_code: e["status_code"].toString()));
+              status_code: e["status_code"].toString(),
+            ),
+          );
         }
 
         setState(() {
@@ -68,29 +74,28 @@ class _WalletBillsState extends State<WalletBills> {
         });
       } catch (_) {
         Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const NoInternet()),
-            (route) => false);
+          context,
+          MaterialPageRoute(builder: (context) => const NoInternet()),
+          (route) => false,
+        );
       }
     } else {
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const NoInternet()),
-          (route) => false);
+        context,
+        MaterialPageRoute(builder: (context) => const NoInternet()),
+        (route) => false,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                  color: orange,
-                ),
-              )
-            : Directionality(
+      backgroundColor: Colors.white,
+      body:
+          isLoading
+              ? Center(child: CircularProgressIndicator(color: orange))
+              : Directionality(
                 textDirection:
                     language == "0" ? TextDirection.ltr : TextDirection.rtl,
                 child: Stack(
@@ -107,27 +112,33 @@ class _WalletBillsState extends State<WalletBills> {
                                 children: [
                                   const Text("              "),
                                   Expanded(
-                                      child: Center(
-                                    child: Text(
-                                      getText("Wallet"),
-                                      style: const TextStyle(
+                                    child: Center(
+                                      child: Text(
+                                        getText("Wallet"),
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 14),
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                     ),
-                                  )),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
+                                      horizontal: 8,
+                                    ),
                                     child: Align(
                                       alignment: Alignment.topCenter,
                                       child: InkWell(
                                         onTap: () {
                                           Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const NotificationPage()));
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) =>
+                                                      const NotificationPage(),
+                                            ),
+                                          );
                                         },
                                         child: Stack(
                                           children: [
@@ -138,24 +149,25 @@ class _WalletBillsState extends State<WalletBills> {
                                             unSeenNotiNum == 0
                                                 ? Container()
                                                 : Container(
-                                                    height: 14,
-                                                    width: 14,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.red,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(100)),
-                                                    child: Center(
-                                                      child: Text(
-                                                        unSeenNotiNum
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                            fontSize: 10,
-                                                            color:
-                                                                Colors.white),
+                                                  height: 14,
+                                                  width: 14,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          100,
+                                                        ),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      unSeenNotiNum.toString(),
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.white,
                                                       ),
                                                     ),
-                                                  )
+                                                  ),
+                                                ),
                                           ],
                                         ),
                                       ),
@@ -171,9 +183,7 @@ class _WalletBillsState extends State<WalletBills> {
                                 ],
                               ),
                             ),
-                            Container(
-                              height: 12,
-                            ),
+                            Container(height: 12),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 17),
                               child: InkWell(
@@ -186,28 +196,38 @@ class _WalletBillsState extends State<WalletBills> {
                                       "assets/charge.png",
                                       height: 25,
                                     ),
-                                    Text(getText("ChargeWallet"),
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 11))
+                                    Text(
+                                      getText("ChargeWallet"),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 170),
+                      padding: const EdgeInsets.only(top: 250),
                       child: Container(
                         decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30))),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
+                          ),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              left: 14, right: 14, top: 25, bottom: 10),
+                            left: 14,
+                            right: 14,
+                            top: 25,
+                            bottom: 10,
+                          ),
                           child: SizedBox(
                             child: ListView(
                               padding: EdgeInsets.zero,
@@ -218,43 +238,42 @@ class _WalletBillsState extends State<WalletBills> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 4),
+                                        horizontal: 4,
+                                      ),
                                       child: Text(
                                         getText("SadadTransactions"),
                                         style: const TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold),
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                                 data.isEmpty
                                     ? Padding(
-                                        padding: const EdgeInsets.only(top: 60),
-                                        child: Center(
-                                          child: Text(
-                                            getText("message24"),
-                                          ),
-                                        ),
-                                      )
+                                      padding: const EdgeInsets.only(top: 60),
+                                      child: Center(
+                                        child: Text(getText("message24")),
+                                      ),
+                                    )
                                     : Column(
-                                        children: [
-                                          Container(
-                                            height: 25,
-                                          ),
-                                          for (int i = 0; i < data.length; i++)
-                                            transaction(i)
-                                        ],
-                                      )
+                                      children: [
+                                        Container(height: 25),
+                                        for (int i = 0; i < data.length; i++)
+                                          transaction(i),
+                                      ],
+                                    ),
                               ],
                             ),
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
-              ));
+              ),
+    );
   }
 
   Column transaction(int i) {
@@ -266,8 +285,8 @@ class _WalletBillsState extends State<WalletBills> {
               data[i].status_code == "1"
                   ? "assets/status1.png"
                   : data[i].status_code == "3"
-                      ? "assets/status2.png"
-                      : "assets/status3.png",
+                  ? "assets/status2.png"
+                  : "assets/status3.png",
               height: 30,
             ),
             Padding(
@@ -279,68 +298,62 @@ class _WalletBillsState extends State<WalletBills> {
                     data[i].status_code == "1"
                         ? getText("Paid")
                         : data[i].status_code == "2"
-                            ? getText("ExpiredNotpaid")
-                            : getText("Pending"),
-                    style: const TextStyle(
-                      fontSize: 11,
-                    ),
+                        ? getText("ExpiredNotpaid")
+                        : getText("Pending"),
+                    style: const TextStyle(fontSize: 11),
                   ),
                   Text(
                     "${getText("SNumber")} ${data[i].saddad_number}",
                     style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  )
+                  ),
                 ],
               ),
             ),
-            Expanded(
-              child: Container(),
-            ),
+            Expanded(child: Container()),
             Column(
               children: [
                 Text(
                   "+ ${data[i].amount}",
                   style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: data[i].status_code == "1"
-                          ? Colors.green
-                          : data[i].status_code == "3"
-                              ? orange
-                              : Colors.red),
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color:
+                        data[i].status_code == "1"
+                            ? Colors.green
+                            : data[i].status_code == "3"
+                            ? orange
+                            : Colors.red,
+                  ),
                 ),
                 Text(
                   data[i].issue_date,
                   style: const TextStyle(fontSize: 10, color: Colors.grey),
-                )
+                ),
               ],
             ),
-            Container(
-              width: 6,
-            ),
+            Container(width: 6),
             data[i].status_code == "3"
                 ? InkWell(
-                    onTap: () {
-                      if (!loadingRefresh) {
-                        setState(() {
-                          loadingRefresh = true;
-                        });
-                        checkStatus(data[i].bill_number, i);
-                      }
-                    },
-                    child: loadingRefresh
-                        ? CircularProgressIndicator(
-                            color: orange,
-                          )
-                        : const Icon(Icons.refresh))
-                : Container()
+                  onTap: () {
+                    if (!loadingRefresh) {
+                      setState(() {
+                        loadingRefresh = true;
+                      });
+                      checkStatus(data[i].bill_number, i);
+                    }
+                  },
+                  child:
+                      loadingRefresh
+                          ? CircularProgressIndicator(color: orange)
+                          : const Icon(Icons.refresh),
+                )
+                : Container(),
           ],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          child: Divider(
-            color: greyc,
-          ),
-        )
+          child: Divider(color: greyc),
+        ),
       ],
     );
   }
@@ -350,9 +363,11 @@ class _WalletBillsState extends State<WalletBills> {
 
     var headers = {'Cookie': 'PHPSESSID=1ljp80udb4p4rbib2mgqomsue8'};
     var request = http.Request(
-        'GET',
-        Uri.parse(
-            '$baseUrl/saddad_transfer_check.php?input_key=$input_key&input_secret=$input_secret&id=$userId&billNumber=$billNumber'));
+      'GET',
+      Uri.parse(
+        '$baseUrl/saddad_transfer_check.php?input_key=$input_key&input_secret=$input_secret&id=$userId&billNumber=$billNumber',
+      ),
+    );
 
     request.headers.addAll(headers);
 
@@ -364,16 +379,22 @@ class _WalletBillsState extends State<WalletBills> {
         if (res["status"] != "error") {
           try {
             String walletBalance2 =
-                Provider.of<MyProvider>(context, listen: false)
-                    .getwalletBalance();
+                Provider.of<MyProvider>(
+                  context,
+                  listen: false,
+                ).getwalletBalance();
             double total =
                 double.parse(walletBalance2) + double.parse(data[index].amount);
-            Provider.of<MyProvider>(context, listen: false)
-                .setwalletBalance(total.toString());
+            Provider.of<MyProvider>(
+              context,
+              listen: false,
+            ).setwalletBalance(total.toString());
           } catch (_) {}
 
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const WalletBills()));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const WalletBills()),
+          );
         } else {
           snackBar(context, res["message"].toString());
         }
@@ -382,9 +403,10 @@ class _WalletBillsState extends State<WalletBills> {
       }
     } else {
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const NoInternet()),
-          (route) => false);
+        context,
+        MaterialPageRoute(builder: (context) => const NoInternet()),
+        (route) => false,
+      );
     }
   }
 
@@ -414,31 +436,31 @@ class _WalletBillsState extends State<WalletBills> {
                             Text(
                               getText("ChargeWallet"),
                               style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             InkWell(
-                                onTap: () => Navigator.pop(context),
-                                child: const Icon(Icons.close))
+                              onTap: () => Navigator.pop(context),
+                              child: const Icon(Icons.close),
+                            ),
                           ],
                         ),
                       ),
-                      Divider(
-                        color: greyc,
-                      ),
+                      Divider(color: greyc),
                       Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              height: 60,
-                            ),
+                            Container(height: 60),
                             Text(
                               getText("EnterAmount"),
                               style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13),
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
                             ),
                             SizedBox(
                               width: 150,
@@ -467,54 +489,57 @@ class _WalletBillsState extends State<WalletBills> {
                               child: InkWell(
                                 onTap: () {
                                   showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return SizedBox(
-                                          height: 50,
-                                          width: 50,
-                                          child: Directionality(
-                                            textDirection: TextDirection.rtl,
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      screenWidth * .22),
-                                              child: AlertDialog(
-                                                  backgroundColor: Colors.white,
-                                                  surfaceTintColor: Colors.grey,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                  ),
-                                                  title: SizedBox(
-                                                    height: 30,
-                                                    width: 30,
-                                                    child: Center(
-                                                      child:
-                                                          CircularProgressIndicator(
+                                    context: context,
+                                    builder: (context) {
+                                      return SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: Directionality(
+                                          textDirection: TextDirection.rtl,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: screenWidth * .22,
+                                            ),
+                                            child: AlertDialog(
+                                              backgroundColor: Colors.white,
+                                              surfaceTintColor: Colors.grey,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              title: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child: Center(
+                                                  child:
+                                                      CircularProgressIndicator(
                                                         color: orange,
                                                       ),
-                                                    ),
-                                                  )),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        );
-                                      });
+                                        ),
+                                      );
+                                    },
+                                  );
                                   payNow();
                                 },
                                 child: Container(
                                   height: 35,
                                   width: 200,
                                   decoration: BoxDecoration(
-                                      color: orange,
-                                      borderRadius: BorderRadius.circular(5)),
+                                    color: orange,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
                                   child: Center(
                                     child: Text(
                                       getText("Pay"),
                                       style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -522,7 +547,7 @@ class _WalletBillsState extends State<WalletBills> {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -542,9 +567,11 @@ class _WalletBillsState extends State<WalletBills> {
 
     var headers = {'Cookie': 'PHPSESSID=1ljp80udb4p4rbib2mgqomsue8'};
     var request = http.Request(
-        'GET',
-        Uri.parse(
-            '$baseUrl/saddad.php?input_key=$input_key&input_secret=$input_secret&product_name=product1&quantity=1&unit_price=${amount.text}&discount=0&discount_type=FIXED&vat=0.00&customer_full_name=$name&customer_email_address=$email&customer_mobile_number=$mobile&user_id=$userId'));
+      'GET',
+      Uri.parse(
+        '$baseUrl/saddad.php?input_key=$input_key&input_secret=$input_secret&product_name=product1&quantity=1&unit_price=${amount.text}&discount=0&discount_type=FIXED&vat=0.00&customer_full_name=$name&customer_email_address=$email&customer_mobile_number=$mobile&user_id=$userId',
+      ),
+    );
 
     request.headers.addAll(headers);
 
@@ -568,9 +595,10 @@ class _WalletBillsState extends State<WalletBills> {
       }
     } else {
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const NoInternet()),
-          (route) => false);
+        context,
+        MaterialPageRoute(builder: (context) => const NoInternet()),
+        (route) => false,
+      );
     }
   }
 }

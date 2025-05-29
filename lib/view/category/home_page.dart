@@ -2,21 +2,21 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:finaltest/controller/note_alert.dart';
-
-import '/controller/language.dart';
-import '/view/category/oneoffers.dart';
-import '/view/notification/notifications.dart';
-import '/view/wallet/points_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '/view/cart/cart.dart';
-import '/view/category/main_categories.dart';
+
+import '/controller/language.dart';
 import '/controller/textstyle.dart';
 import '/controller/var.dart';
+import '/view/cart/cart.dart';
+import '/view/category/main_categories.dart';
 import '/view/category/offers.dart';
+import '/view/category/oneoffers.dart';
 import '/view/category/sub_category.dart';
 import '/view/merchant/mainMerchentPage.dart';
 import '/view/merchant/upgradeToMarchant/upgrade_account.dart';
+import '/view/notification/notifications.dart';
+import '/view/wallet/points_transaction.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -371,6 +371,8 @@ class _HomePageState extends State<HomePage> {
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           for (int i = 0; i < 4; i++)
                                             categoryItem(i),
@@ -649,7 +651,10 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Image.network(categories[index].image),
+                  child:
+                      categories[index].image == ""
+                          ? Icon(Icons.category)
+                          : Image.network(categories[index].image),
                 ),
               ),
           index > categories.length - 1
@@ -658,9 +663,10 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(top: 5),
                 child: SizedBox(
                   width: 60,
-                  height: 30,
                   child: Text(
-                    categories[index].name,
+                    categories[index].name == ""
+                        ? "No Name"
+                        : categories[index].name,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,

@@ -1,25 +1,21 @@
 import 'dart:convert';
-
 import 'dart:developer';
-import '/model/withdrawal.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
+import '/model/withdrawal.dart';
 import '../../controller/language.dart';
+import '../../controller/no_imternet.dart';
 import '../../controller/sucess_popup.dart';
 import '../../controller/textstyle.dart';
 import '../../controller/var.dart';
-import 'package:http/http.dart' as http;
-
-import '../../controller/no_imternet.dart';
 import '../notification/notifications.dart';
 
 class Withdrawal extends StatefulWidget {
   final String balance;
-  const Withdrawal({
-    super.key,
-    required this.balance,
-  });
+  const Withdrawal({super.key, required this.balance});
 
   @override
   State<Withdrawal> createState() => _WithdrawalState();
@@ -37,12 +33,14 @@ class _WithdrawalState extends State<Withdrawal> {
 
   getData() async {
     String userId = await getUserId();
-    String requester_type = isUserNow ? "1" : "2";
+    String requesterType = isUserNow ? "1" : "2";
     var headers = {'Cookie': 'PHPSESSID=1ljp80udb4p4rbib2mgqomsue8'};
     var request = http.Request(
-        'GET',
-        Uri.parse(
-            '$baseUrl/withdrawls.php?input_key=$input_key&input_secret=$input_secret&requester_type=$requester_type&id=$userId&amount=1&scenario=2'));
+      'GET',
+      Uri.parse(
+        '$baseUrl/withdrawls.php?input_key=$input_key&input_secret=$input_secret&requester_type=$requesterType&id=$userId&amount=1&scenario=2',
+      ),
+    );
 
     request.headers.addAll(headers);
 
@@ -53,14 +51,16 @@ class _WithdrawalState extends State<Withdrawal> {
         List res = json.decode(await response.stream.bytesToString())["data"];
         log(res.toString());
         for (var e in res) {
-          data.add(WithdrawalClass(
-            idx: e["idx"].toString(),
-            requester_type: e["requester_type"].toString(),
-            id: e["id"].toString(),
-            amount: e["amount"].toString(),
-            date: e["date"].toString(),
-            status: e["status"].toString(),
-          ));
+          data.add(
+            WithdrawalClass(
+              idx: e["idx"].toString(),
+              requester_type: e["requester_type"].toString(),
+              id: e["id"].toString(),
+              amount: e["amount"].toString(),
+              date: e["date"].toString(),
+              status: e["status"].toString(),
+            ),
+          );
         }
         setState(() {
           isLoading = false;
@@ -68,29 +68,28 @@ class _WithdrawalState extends State<Withdrawal> {
       } catch (e) {
         log(e.toString());
         Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const NoInternet()),
-            (route) => false);
+          context,
+          MaterialPageRoute(builder: (context) => const NoInternet()),
+          (route) => false,
+        );
       }
     } else {
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const NoInternet()),
-          (route) => false);
+        context,
+        MaterialPageRoute(builder: (context) => const NoInternet()),
+        (route) => false,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                  color: orange,
-                ),
-              )
-            : Directionality(
+      backgroundColor: Colors.white,
+      body:
+          isLoading
+              ? Center(child: CircularProgressIndicator(color: orange))
+              : Directionality(
                 textDirection:
                     language == "0" ? TextDirection.ltr : TextDirection.rtl,
                 child: Stack(
@@ -107,27 +106,33 @@ class _WithdrawalState extends State<Withdrawal> {
                                 children: [
                                   const Text("              "),
                                   Expanded(
-                                      child: Center(
-                                    child: Text(
-                                      getText("WithdrawalRequests"),
-                                      style: const TextStyle(
+                                    child: Center(
+                                      child: Text(
+                                        getText("WithdrawalRequests"),
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 14),
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                     ),
-                                  )),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
+                                      horizontal: 8,
+                                    ),
                                     child: Align(
                                       alignment: Alignment.topCenter,
                                       child: InkWell(
                                         onTap: () {
                                           Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const NotificationPage()));
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) =>
+                                                      const NotificationPage(),
+                                            ),
+                                          );
                                         },
                                         child: Stack(
                                           children: [
@@ -138,24 +143,25 @@ class _WithdrawalState extends State<Withdrawal> {
                                             unSeenNotiNum == 0
                                                 ? Container()
                                                 : Container(
-                                                    height: 14,
-                                                    width: 14,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.red,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(100)),
-                                                    child: Center(
-                                                      child: Text(
-                                                        unSeenNotiNum
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                            fontSize: 10,
-                                                            color:
-                                                                Colors.white),
+                                                  height: 14,
+                                                  width: 14,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          100,
+                                                        ),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      unSeenNotiNum.toString(),
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.white,
                                                       ),
                                                     ),
-                                                  )
+                                                  ),
+                                                ),
                                           ],
                                         ),
                                       ),
@@ -171,23 +177,24 @@ class _WithdrawalState extends State<Withdrawal> {
                                 ],
                               ),
                             ),
-                            Container(
-                              height: 12,
-                            ),
+                            Container(height: 12),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(
                                 getText("AvailableBalance"),
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 14),
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                             Text(
                               widget.balance,
                               style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             InkWell(
                               onTap: () {
@@ -197,15 +204,17 @@ class _WithdrawalState extends State<Withdrawal> {
                                 height: 35,
                                 width: 120,
                                 decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(5)),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
                                 child: Center(
                                   child: Text(
                                     getText("WithdrawalRequests"),
                                     style: TextStyle(
-                                        color: orange,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12),
+                                      color: orange,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -215,57 +224,62 @@ class _WithdrawalState extends State<Withdrawal> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 200),
+                      padding: const EdgeInsets.only(top: 250),
                       child: Container(
                         decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30))),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
+                          ),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              left: 14, right: 14, top: 25, bottom: 10),
+                            left: 14,
+                            right: 14,
+                            top: 25,
+                            bottom: 10,
+                          ),
                           child: SizedBox(
                             child: ListView(
                               padding: EdgeInsets.zero,
                               children: [
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
                                   child: Text(
                                     getText("message25"),
                                     style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 data.isEmpty
                                     ? Padding(
-                                        padding: const EdgeInsets.only(top: 60),
-                                        child: Center(
-                                          child: Text(
-                                            getText("message24"),
-                                          ),
-                                        ),
-                                      )
+                                      padding: const EdgeInsets.only(top: 60),
+                                      child: Center(
+                                        child: Text(getText("message24")),
+                                      ),
+                                    )
                                     : Column(
-                                        children: [
-                                          Container(
-                                            height: 25,
-                                          ),
-                                          for (int i = 0; i < data.length; i++)
-                                            transaction(i)
-                                        ],
-                                      )
+                                      children: [
+                                        Container(height: 25),
+                                        for (int i = 0; i < data.length; i++)
+                                          transaction(i),
+                                      ],
+                                    ),
                               ],
                             ),
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
-              ));
+              ),
+    );
   }
 
   void _requestDialog() {
@@ -294,31 +308,31 @@ class _WithdrawalState extends State<Withdrawal> {
                             Text(
                               getText("WithdrawalRequests"),
                               style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             InkWell(
-                                onTap: () => Navigator.pop(context),
-                                child: const Icon(Icons.close))
+                              onTap: () => Navigator.pop(context),
+                              child: const Icon(Icons.close),
+                            ),
                           ],
                         ),
                       ),
-                      Divider(
-                        color: greyc,
-                      ),
+                      Divider(color: greyc),
                       Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              height: 60,
-                            ),
+                            Container(height: 60),
                             Text(
                               getText("EnterAmount"),
                               style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13),
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
                             ),
                             SizedBox(
                               width: 150,
@@ -347,54 +361,57 @@ class _WithdrawalState extends State<Withdrawal> {
                               child: InkWell(
                                 onTap: () {
                                   showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return SizedBox(
-                                          height: 50,
-                                          width: 50,
-                                          child: Directionality(
-                                            textDirection: TextDirection.rtl,
-                                            child: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      screenWidth * .22),
-                                              child: AlertDialog(
-                                                  backgroundColor: Colors.white,
-                                                  surfaceTintColor: Colors.grey,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                  ),
-                                                  title: SizedBox(
-                                                    height: 30,
-                                                    width: 30,
-                                                    child: Center(
-                                                      child:
-                                                          CircularProgressIndicator(
+                                    context: context,
+                                    builder: (context) {
+                                      return SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: Directionality(
+                                          textDirection: TextDirection.rtl,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: screenWidth * .22,
+                                            ),
+                                            child: AlertDialog(
+                                              backgroundColor: Colors.white,
+                                              surfaceTintColor: Colors.grey,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              title: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child: Center(
+                                                  child:
+                                                      CircularProgressIndicator(
                                                         color: orange,
                                                       ),
-                                                    ),
-                                                  )),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        );
-                                      });
+                                        ),
+                                      );
+                                    },
+                                  );
                                   requestNow();
                                 },
                                 child: Container(
                                   height: 35,
                                   width: 200,
                                   decoration: BoxDecoration(
-                                      color: orange,
-                                      borderRadius: BorderRadius.circular(5)),
+                                    color: orange,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
                                   child: Center(
                                     child: Text(
                                       getText("Request"),
                                       style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -402,7 +419,7 @@ class _WithdrawalState extends State<Withdrawal> {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -416,12 +433,14 @@ class _WithdrawalState extends State<Withdrawal> {
 
   requestNow() async {
     String userId = await getUserId();
-    String requester_type = isUserNow ? "1" : "2";
+    String requesterType = isUserNow ? "1" : "2";
     var headers = {'Cookie': 'PHPSESSID=1ljp80udb4p4rbib2mgqomsue8'};
     var request = http.Request(
-        'GET',
-        Uri.parse(
-            '$baseUrl/withdrawls.php?input_key=$input_key&input_secret=$input_secret&requester_type=$requester_type&id=$userId&amount=${amount.text}&scenario=1'));
+      'GET',
+      Uri.parse(
+        '$baseUrl/withdrawls.php?input_key=$input_key&input_secret=$input_secret&requester_type=$requesterType&id=$userId&amount=${amount.text}&scenario=1',
+      ),
+    );
 
     request.headers.addAll(headers);
 
@@ -446,9 +465,10 @@ class _WithdrawalState extends State<Withdrawal> {
       }
     } else {
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const NoInternet()),
-          (route) => false);
+        context,
+        MaterialPageRoute(builder: (context) => const NoInternet()),
+        (route) => false,
+      );
     }
   }
 
@@ -457,66 +477,49 @@ class _WithdrawalState extends State<Withdrawal> {
       children: [
         Row(
           children: [
-            Image.asset(
-              "assets/status1.png",
-              height: 30,
-            ),
+            Image.asset("assets/status1.png", height: 30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    data[i].idx,
-                    style: const TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
+                  Text(data[i].idx, style: const TextStyle(fontSize: 12)),
                   Text(
                     data[i].status == "0"
                         ? getText("Pending")
                         : data[i].status == "1"
-                            ? getText("Approved")
-                            : getText("Rejected"),
+                        ? getText("Approved")
+                        : getText("Rejected"),
                     style: const TextStyle(fontSize: 11, color: Colors.grey),
-                  )
+                  ),
                 ],
               ),
             ),
-            Expanded(
-              child: Container(),
-            ),
+            Expanded(child: Container()),
             Column(
               children: [
                 Text(
                   data[i].amount,
                   style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green),
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
                 ),
                 Text(
                   data[i].date,
                   style: const TextStyle(fontSize: 11, color: Colors.grey),
-                )
+                ),
               ],
             ),
-            Container(
-              width: 6,
-            ),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-              size: 18,
-            )
+            Container(width: 6),
+            const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
           ],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-          child: Divider(
-            color: greyc,
-          ),
-        )
+          child: Divider(color: greyc),
+        ),
       ],
     );
   }
