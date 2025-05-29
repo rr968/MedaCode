@@ -4,12 +4,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
 import '/controller/no_imternet.dart';
 import '/controller/var.dart';
-import 'package:http/http.dart' as http;
 import '/view/mainpage.dart';
-import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import '../auth/login.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,10 +19,42 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   bool isLoading = true;
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
   @override
   void initState() {
+    _controller = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    );
+
+    _animation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 0.02,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
+        weight: 40.0,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 1.0),
+        weight: 40.0,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 1.0,
+          end: 0.02,
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 40.0,
+      ),
+    ]).animate(_controller);
+
+    _controller.repeat(reverse: true); // Make the animation repeat
+
     determinePosition().then((value) {
       if (value is LatLong) {
         latLng = value;
@@ -50,6 +82,12 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // Dispose the animation controller
+    super.dispose();
   }
 
   getLanguageCode() async {
@@ -182,16 +220,26 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: screenHeight,
         width: screenWidth,
-        decoration: const BoxDecoration(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: screenWidth / 2.6,
-            vertical: screenHeight / 2.6,
-          ),
-          child: Image.asset("assets/splash.png"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Spacer(flex: 3),
+            FadeTransition(
+              opacity: _animation,
+              child: Image.asset(
+                "assets/splash.png",
+                width: screenWidth * 0.35,
+                height: screenWidth * 0.35,
+              ),
+            ),
+            Spacer(flex: 2),
+            CircularProgressIndicator.adaptive(),
+            Spacer(flex: 1),
+          ],
         ),
       ),
     );
