@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -129,7 +128,7 @@ class _MyChatsState extends State<MyChats> {
         child: Stack(
           children: [
             Container(
-              height: Platform.isIOS ? 90 : 85,
+              height: screenHeight * 0.15,
               decoration: BoxDecoration(gradient: gradient),
               child: Stack(
                 children: [
@@ -232,7 +231,7 @@ class _MyChatsState extends State<MyChats> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: Platform.isIOS ? 90 : 69),
+              padding: EdgeInsets.only(top: screenHeight * 0.13),
               child: Container(
                 height: screenHeight,
                 width: screenWidth,
