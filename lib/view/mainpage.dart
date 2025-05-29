@@ -114,7 +114,7 @@ class _MainPageState extends State<MainPage> {
                       border: Border(top: BorderSide(color: greyc)),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 20, bottom: 5),
+                      padding: const EdgeInsets.only(top: 15, bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [

@@ -220,6 +220,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SizedBox(
         height: screenHeight,
         width: screenWidth,
@@ -237,7 +238,10 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
             Spacer(flex: 2),
-            CircularProgressIndicator.adaptive(),
+            Theme(
+              data: Theme.of(context).copyWith(platform: TargetPlatform.iOS),
+              child: const CircularProgressIndicator.adaptive(),
+            ),
             Spacer(flex: 1),
           ],
         ),
