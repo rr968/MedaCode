@@ -973,6 +973,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                       FilteringTextInputFormatter.digitsOnly,
                     ],
                     keyboardType: TextInputType.number,
+                    onTapOutside: (event) {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
                     decoration: InputDecoration(
                       labelText: getText("Quantity"),
                       hintStyle: const TextStyle(fontSize: 13),
