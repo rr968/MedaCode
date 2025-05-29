@@ -4,18 +4,18 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import '/view/mainpage.dart';
-import '/view/merchant/mainMerchentPage.dart';
 import 'package:flutter/material.dart';
-import '../../controller/language.dart';
-import '../notification/notifications.dart';
-import '/controller/var.dart';
 import 'package:http/http.dart' as http;
+
+import '/controller/var.dart';
 import '/model/my_chats.dart';
 import '/view/chat/chat_page.dart';
-
+import '/view/mainpage.dart';
+import '/view/merchant/mainMerchentPage.dart';
+import '../../controller/language.dart';
 import '../../controller/no_imternet.dart';
 import '../../controller/textstyle.dart';
+import '../notification/notifications.dart';
 
 class MyChats extends StatefulWidget {
   bool isUser;
@@ -77,6 +77,7 @@ class _MyChatsState extends State<MyChats> {
           );
           log(element["non_read_messages"].toString());
         });
+        myChats = myChats.reversed.toList();
 
         setState(() {
           isLoading = false;
