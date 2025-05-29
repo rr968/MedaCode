@@ -7,15 +7,16 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../controller/language.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
 import '/controller/head_bar.dart';
 import '/controller/no_imternet.dart';
 import '/controller/provider.dart';
 import '/controller/var.dart';
 import '/model/cart_item.dart';
 import '/view/cart/cart.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
+import '../../controller/language.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   int categotyIndex;
@@ -170,38 +171,41 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                           ),
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          if (Provider.of<MyProvider>(
-                            context,
-                            listen: false,
-                          ).getSelectProductIndexes().isEmpty) {
-                            snackBar(context, getText("message12"));
-                          } else {
-                            _showOrderPopupMenu();
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 16,
-                            bottom: 20,
-                            left: 10,
-                            right: 10,
-                          ),
-                          child: Container(
-                            height: 35,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: orange,
-                              borderRadius: BorderRadius.circular(5),
+                      SafeArea(
+                        top: false,
+                        child: InkWell(
+                          onTap: () {
+                            if (Provider.of<MyProvider>(
+                              context,
+                              listen: false,
+                            ).getSelectProductIndexes().isEmpty) {
+                              snackBar(context, getText("message12"));
+                            } else {
+                              _showOrderPopupMenu();
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 16,
+                              bottom: 20,
+                              left: 10,
+                              right: 10,
                             ),
-                            child: Center(
-                              child: Text(
-                                getText("AddItems"),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
+                            child: Container(
+                              height: 35,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: orange,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  getText("AddItems"),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
                                 ),
                               ),
                             ),
@@ -223,265 +227,269 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Directionality(
-          textDirection:
-              language == "0" ? TextDirection.ltr : TextDirection.rtl,
-          child: SizedBox(
-            height: 500,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 15,
-                      bottom: 17,
-                      left: 6,
-                      right: 6,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          getText("Myorders"),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Provider.of<MyProvider>(
-                              context,
-                              listen: false,
-                            ).setSelectProductIndexes([]);
-                            quantityControllers.clear();
-                            labelControllers.clear();
-                          },
-                          child: Text(
-                            getText("DeleteAll"),
-                            style: TextStyle(
-                              color: orange,
-                              decoration: TextDecoration.underline,
+        return SafeArea(
+          child: Directionality(
+            textDirection:
+                language == "0" ? TextDirection.ltr : TextDirection.rtl,
+            child: SizedBox(
+              height: 500,
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 15,
+                        bottom: 17,
+                        left: 6,
+                        right: 6,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            getText("Myorders"),
+                            style: const TextStyle(
                               fontSize: 14,
-                              decorationColor: orange,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        for (
-                          int i = 0;
-                          i <
+                          InkWell(
+                            onTap: () {
                               Provider.of<MyProvider>(
                                 context,
-                                listen: true,
-                              ).getSelectProductIndexes().length;
-                          i++
-                        )
-                          Column(
-                            children: [
-                              Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment
-                                        .start, // Important for vertical alignment
-                                children: [
-                                  Container(
-                                    height: 45,
-                                    width: 45,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                        color: const Color.fromARGB(
-                                          255,
-                                          181,
-                                          181,
-                                          181,
-                                        ),
-                                      ),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          categories[int.parse(
-                                                Provider.of<MyProvider>(
-                                                      context,
-                                                      listen: true,
-                                                    )
-                                                    .getSelectProductIndexes()[i]
-                                                    .split(",")[0],
-                                              )]
-                                              .subCategory[int.parse(
-                                                Provider.of<MyProvider>(
-                                                      context,
-                                                      listen: true,
-                                                    )
-                                                    .getSelectProductIndexes()[i]
-                                                    .split(",")[1],
-                                              )]
-                                              .products[int.parse(
-                                                Provider.of<MyProvider>(
-                                                      context,
-                                                      listen: true,
-                                                    )
-                                                    .getSelectProductIndexes()[i]
-                                                    .split(",")[2],
-                                              )]
-                                              .image,
-                                        ),
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    // Allow text to take available space and wrap
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          categories[int.parse(
-                                                Provider.of<MyProvider>(
-                                                      context,
-                                                      listen: true,
-                                                    )
-                                                    .getSelectProductIndexes()[i]
-                                                    .split(",")[0],
-                                              )]
-                                              .subCategory[int.parse(
-                                                Provider.of<MyProvider>(
-                                                      context,
-                                                      listen: true,
-                                                    )
-                                                    .getSelectProductIndexes()[i]
-                                                    .split(",")[1],
-                                              )]
-                                              .products[int.parse(
-                                                Provider.of<MyProvider>(
-                                                      context,
-                                                      listen: true,
-                                                    )
-                                                    .getSelectProductIndexes()[i]
-                                                    .split(",")[2],
-                                              )]
-                                              .name,
-                                          textAlign: TextAlign.start,
-                                          style: const TextStyle(fontSize: 12),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          categories[int.parse(
-                                                Provider.of<MyProvider>(
-                                                      context,
-                                                      listen: true,
-                                                    )
-                                                    .getSelectProductIndexes()[i]
-                                                    .split(",")[0],
-                                              )]
-                                              .subCategory[int.parse(
-                                                Provider.of<MyProvider>(
-                                                      context,
-                                                      listen: true,
-                                                    )
-                                                    .getSelectProductIndexes()[i]
-                                                    .split(",")[1],
-                                              )]
-                                              .products[int.parse(
-                                                Provider.of<MyProvider>(
-                                                      context,
-                                                      listen: true,
-                                                    )
-                                                    .getSelectProductIndexes()[i]
-                                                    .split(",")[2],
-                                              )]
-                                              .description,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey,
-                                          ),
-                                          softWrap: true,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  InkWell(
-                                    onTap: () {
-                                      Provider.of<MyProvider>(
-                                        context,
-                                        listen: false,
-                                      ).removeAtIndex(i);
-                                      quantityControllers.removeAt(i);
-                                      labelControllers.removeAt(i);
-                                    },
-                                    child: Image.asset(
-                                      "assets/trash.png",
-                                      height: 19,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 30,
-                                ),
-                                child: Container(
-                                  height: 1,
-                                  color: const Color.fromARGB(
-                                    255,
-                                    199,
-                                    199,
-                                    199,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  ),
-                  Provider.of<MyProvider>(
-                        context,
-                        listen: true,
-                      ).getSelectProductIndexes().isEmpty
-                      ? Container()
-                      : InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          _showOrderPopupMenu();
-                        },
-                        child: Container(
-                          height: 35,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color:
-                                Provider.of<MyProvider>(
-                                      context,
-                                      listen: true,
-                                    ).getSelectProductIndexes().isEmpty
-                                    ? Colors.grey
-                                    : orange,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
+                                listen: false,
+                              ).setSelectProductIndexes([]);
+                              quantityControllers.clear();
+                              labelControllers.clear();
+                            },
                             child: Text(
-                              getText("AddItems"),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                              getText("DeleteAll"),
+                              style: TextStyle(
+                                color: orange,
+                                decoration: TextDecoration.underline,
                                 fontSize: 14,
+                                decorationColor: orange,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          for (
+                            int i = 0;
+                            i <
+                                Provider.of<MyProvider>(
+                                  context,
+                                  listen: true,
+                                ).getSelectProductIndexes().length;
+                            i++
+                          )
+                            Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment
+                                          .start, // Important for vertical alignment
+                                  children: [
+                                    Container(
+                                      height: 45,
+                                      width: 45,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: const Color.fromARGB(
+                                            255,
+                                            181,
+                                            181,
+                                            181,
+                                          ),
+                                        ),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            categories[int.parse(
+                                                  Provider.of<MyProvider>(
+                                                        context,
+                                                        listen: true,
+                                                      )
+                                                      .getSelectProductIndexes()[i]
+                                                      .split(",")[0],
+                                                )]
+                                                .subCategory[int.parse(
+                                                  Provider.of<MyProvider>(
+                                                        context,
+                                                        listen: true,
+                                                      )
+                                                      .getSelectProductIndexes()[i]
+                                                      .split(",")[1],
+                                                )]
+                                                .products[int.parse(
+                                                  Provider.of<MyProvider>(
+                                                        context,
+                                                        listen: true,
+                                                      )
+                                                      .getSelectProductIndexes()[i]
+                                                      .split(",")[2],
+                                                )]
+                                                .image,
+                                          ),
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      // Allow text to take available space and wrap
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            categories[int.parse(
+                                                  Provider.of<MyProvider>(
+                                                        context,
+                                                        listen: true,
+                                                      )
+                                                      .getSelectProductIndexes()[i]
+                                                      .split(",")[0],
+                                                )]
+                                                .subCategory[int.parse(
+                                                  Provider.of<MyProvider>(
+                                                        context,
+                                                        listen: true,
+                                                      )
+                                                      .getSelectProductIndexes()[i]
+                                                      .split(",")[1],
+                                                )]
+                                                .products[int.parse(
+                                                  Provider.of<MyProvider>(
+                                                        context,
+                                                        listen: true,
+                                                      )
+                                                      .getSelectProductIndexes()[i]
+                                                      .split(",")[2],
+                                                )]
+                                                .name,
+                                            textAlign: TextAlign.start,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            categories[int.parse(
+                                                  Provider.of<MyProvider>(
+                                                        context,
+                                                        listen: true,
+                                                      )
+                                                      .getSelectProductIndexes()[i]
+                                                      .split(",")[0],
+                                                )]
+                                                .subCategory[int.parse(
+                                                  Provider.of<MyProvider>(
+                                                        context,
+                                                        listen: true,
+                                                      )
+                                                      .getSelectProductIndexes()[i]
+                                                      .split(",")[1],
+                                                )]
+                                                .products[int.parse(
+                                                  Provider.of<MyProvider>(
+                                                        context,
+                                                        listen: true,
+                                                      )
+                                                      .getSelectProductIndexes()[i]
+                                                      .split(",")[2],
+                                                )]
+                                                .description,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey,
+                                            ),
+                                            softWrap: true,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    InkWell(
+                                      onTap: () {
+                                        Provider.of<MyProvider>(
+                                          context,
+                                          listen: false,
+                                        ).removeAtIndex(i);
+                                        quantityControllers.removeAt(i);
+                                        labelControllers.removeAt(i);
+                                      },
+                                      child: Image.asset(
+                                        "assets/trash.png",
+                                        height: 19,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 10,
+                                    horizontal: 30,
+                                  ),
+                                  child: Container(
+                                    height: 1,
+                                    color: const Color.fromARGB(
+                                      255,
+                                      199,
+                                      199,
+                                      199,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                    Provider.of<MyProvider>(
+                          context,
+                          listen: true,
+                        ).getSelectProductIndexes().isEmpty
+                        ? Container()
+                        : InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                            _showOrderPopupMenu();
+                          },
+                          child: Container(
+                            height: 35,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color:
+                                  Provider.of<MyProvider>(
+                                        context,
+                                        listen: true,
+                                      ).getSelectProductIndexes().isEmpty
+                                      ? Colors.grey
+                                      : orange,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                getText("AddItems"),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -497,161 +505,163 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Directionality(
-          textDirection:
-              language == "0" ? TextDirection.ltr : TextDirection.rtl,
-          child: SizedBox(
-            height: screenHeight - 60,
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("    "),
-                        Text(
-                          getText("Orders"),
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Icon(
-                            Icons.close,
-                            size: 22,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.grey),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListView(
-                          children: [
-                            for (
-                              int i = 0;
-                              i <
-                                  Provider.of<MyProvider>(
-                                    context,
-                                    listen: true,
-                                  ).getSelectProductIndexes().length;
-                              i++
-                            )
-                              itemInOrder(i),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(height: 10),
-                  InkWell(
-                    onTap: () {
-                      bool flag = true;
-                      String errors = "";
-                      int i = 1;
-                      for (var element in quantityControllers) {
-                        if (element.text.trim().isEmpty) {
-                          flag = false;
-                          errors += "product number $i ,";
-                        }
-                        i++;
-                      }
-
-                      if (flag) {
-                        submitFunction();
-                      } else {
-                        showCupertinoDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoAlertDialog(
-                              title: const Text('ERROR'),
-                              content: Text(
-                                "you must fill the quantities in $errors",
-                              ),
-                              actions: <Widget>[
-                                CupertinoDialogAction(
-                                  child: Text(getText('OK')),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Container(
-                        height: 35,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color:
-                              Provider.of<MyProvider>(
-                                    context,
-                                    listen: true,
-                                  ).getSelectProductIndexes().isEmpty
-                                  ? Colors.grey
-                                  : orange,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                          child: Text(
-                            getText("GoCart"),
+        return SafeArea(
+          child: Directionality(
+            textDirection:
+                language == "0" ? TextDirection.ltr : TextDirection.rtl,
+            child: SizedBox(
+              height: screenHeight * 0.8,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("    "),
+                          Text(
+                            getText("Orders"),
                             style: const TextStyle(
-                              color: Colors.white,
+                              fontSize: 13,
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
                             ),
                           ),
-                        ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              size: 22,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      showAppleAlert(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
+                    Expanded(
                       child: Container(
-                        height: 35,
-                        width: double.infinity,
                         decoration: BoxDecoration(
-                          //color: Colors.white,
-                          border: Border.all(color: orange),
                           borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: Colors.grey),
                         ),
-                        child: Center(
-                          child: Text(
-                            getText("CancelOrder"),
-                            style: TextStyle(
-                              color: orange,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView(
+                            children: [
+                              for (
+                                int i = 0;
+                                i <
+                                    Provider.of<MyProvider>(
+                                      context,
+                                      listen: true,
+                                    ).getSelectProductIndexes().length;
+                                i++
+                              )
+                                itemInOrder(i),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(height: 10),
+                    InkWell(
+                      onTap: () {
+                        bool flag = true;
+                        String errors = "";
+                        int i = 1;
+                        for (var element in quantityControllers) {
+                          if (element.text.trim().isEmpty) {
+                            flag = false;
+                            errors += "product number $i ,";
+                          }
+                          i++;
+                        }
+
+                        if (flag) {
+                          submitFunction();
+                        } else {
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CupertinoAlertDialog(
+                                title: const Text('ERROR'),
+                                content: Text(
+                                  "you must fill the quantities in $errors",
+                                ),
+                                actions: <Widget>[
+                                  CupertinoDialogAction(
+                                    child: Text(getText('OK')),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Container(
+                          height: 35,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color:
+                                Provider.of<MyProvider>(
+                                      context,
+                                      listen: true,
+                                    ).getSelectProductIndexes().isEmpty
+                                    ? Colors.grey
+                                    : orange,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              getText("GoCart"),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(height: 7),
-                ],
+                    InkWell(
+                      onTap: () {
+                        showAppleAlert(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Container(
+                          height: 35,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            //color: Colors.white,
+                            border: Border.all(color: orange),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              getText("CancelOrder"),
+                              style: TextStyle(
+                                color: orange,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(height: 7),
+                  ],
+                ),
               ),
             ),
           ),
@@ -877,7 +887,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           width: screenWidth * .6,
                           child: Text(
                             categories[int.parse(
@@ -962,6 +972,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly,
                     ],
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: getText("Quantity"),
                       hintStyle: const TextStyle(fontSize: 13),
@@ -1003,28 +1014,28 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: labelControllers[i],
-                    decoration: InputDecoration(
-                      labelText: getText("Label"),
-                      hintStyle: const TextStyle(fontSize: 13),
-                      hintText: getText("Label"),
-                      labelStyle: TextStyle(
-                        color: orange,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+          //   child: Row(
+          //     children: [
+          //       Expanded(
+          //         child: TextField(
+          //           controller: labelControllers[i],
+          //           decoration: InputDecoration(
+          //             labelText: getText("Label"),
+          //             hintStyle: const TextStyle(fontSize: 13),
+          //             hintText: getText("Label"),
+          //             labelStyle: TextStyle(
+          //               color: orange,
+          //               fontWeight: FontWeight.bold,
+          //               fontSize: 13,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           const SizedBox(height: 20),
         ],
       ),
