@@ -295,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: Platform.isIOS ? 220 : 125),
+                      padding: EdgeInsets.only(top: Platform.isIOS ? 180 : 125),
                       child: Column(
                         children: [
                           Padding(
@@ -439,7 +439,7 @@ class _HomePageState extends State<HomePage> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: SizedBox(
-                              height: 110,
+                              height: 150,
                               child: ListView(
                                 scrollDirection: Axis.horizontal,
                                 children: [

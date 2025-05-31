@@ -43,6 +43,16 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primaryColor: orange, hintColor: Colors.black),
         home: const SplashScreen(),
+        builder: (context, child) {
+          final mediaQueryData = MediaQuery.of(context);
+          final scale = mediaQueryData.textScaleFactor.clamp(1.2, 1.2);
+          return MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(scale)),
+            child: child!,
+          );
+        },
       ),
     );
   }
