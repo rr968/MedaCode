@@ -32,6 +32,8 @@
 	<string>Meda - ميدة app needs access to your microphone to record audio.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Meda - ميدة app needs access to your photo library to pick images.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Meda - ميدة app needs local network access to support features.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

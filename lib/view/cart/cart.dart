@@ -1,17 +1,18 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously
 
 import 'dart:convert';
-import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
 import '/controller/language.dart';
-import '/view/mainpage.dart';
-import 'package:flutter/material.dart';
 import '/controller/no_imternet.dart';
 import '/controller/var.dart';
 import '/model/cart_item.dart';
 import '/view/checkout/checkout.dart';
+import '/view/mainpage.dart';
 import '/view/splashscreen/splashscreen.dart';
-import 'package:http/http.dart' as http;
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -27,8 +28,13 @@ class _CartState extends State<Cart> {
   @override
   void initState() {
     gatCartItems().then((value) {
-      setState(() {
-        isLoading = false;
+      determinePosition().then((value) {
+        if (value is LatLong) {
+          latLng = value;
+        }
+        setState(() {
+          isLoading = false;
+        });
       });
     });
     super.initState();
@@ -294,7 +300,7 @@ class _CartState extends State<Cart> {
                                                                 fontSize: 14,
                                                               ),
                                                         ),
-                                                        Container(
+                                                        SizedBox(
                                                           height: 80,
                                                           child: Text(
                                                             cartItems[i]
@@ -358,21 +364,20 @@ class _CartState extends State<Cart> {
                           ? Container()
                           : InkWell(
                             onTap: () async {
+                              if (latLng == null) {
+                                snackBar(context, getText("message37"));
+                                return;
+                              }
                               Map address =
                                   await getAddressFromCoordinates(latLng) ?? {};
-                              log(address.toString());
-                              log(latLng!.latitude.toString());
-                              log(latLng!.longitude.toString());
+
                               String add =
                                   address == {}
                                       ? ""
                                       : language == "0"
                                       ? address["address_en"]
                                       : address["address_ar"];
-                              log(
-                                "///////////////address from coordinates/////////////",
-                              );
-                              log(add);
+
                               if (add != "" && latLng != null) {
                                 Navigator.push(
                                   context,

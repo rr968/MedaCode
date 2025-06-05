@@ -5,15 +5,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '/model/category.dart';
 import '/model/latest_order.dart';
 import '/model/offers.dart';
 import '/model/product.dart';
 import '/model/sub_category.dart';
-import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-
 import '../model/merchant_ordars.dart';
 
 double currentAndroidVersion = 1.3;
@@ -378,29 +378,31 @@ getPoint() async {
 }
 
 Future determinePosition() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    return 'Location services are disabled.';
-  }
-
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      return 'Location permissions are denied';
+  try {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return 'Location services are disabled.';
     }
-  }
 
-  if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately.
-    return 'Location permissions are permanently denied, we cannot request permissions.';
-  }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return 'Location permissions are denied';
+      }
+    }
 
-  var data = await Geolocator.getCurrentPosition();
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return 'Location permissions are permanently denied, we cannot request permissions.';
+    }
 
-  return LatLong(data.latitude, data.longitude);
+    var data = await Geolocator.getCurrentPosition();
+
+    return LatLong(data.latitude, data.longitude);
+  } catch (e) {}
 }
 
 Future<Map?> getAddressFromCoordinates(LatLong? info) async {

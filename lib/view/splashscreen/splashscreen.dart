@@ -5,7 +5,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
 import '/controller/no_imternet.dart';
 import '/controller/var.dart';
@@ -55,21 +54,24 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.repeat(reverse: true); // Make the animation repeat
 
-    determinePosition().then((value) {
-      if (value is LatLong) {
-        latLng = value;
-      } else {
-        snackBar(context, value.toString());
-      }
-    });
-    isMerchant();
-    getOffers();
-    getToken();
-    getdata();
-    getPoint();
-    getLatestOrder();
-    getUnSeenNotifications();
-    getLanguageCode();
+    // determinePosition().then((value) {
+    //   if (value is LatLong) {
+    //     latLng = value;
+    //   } else {
+    //     snackBar(context, value.toString());
+    //   }
+    // });
+    try {
+      isMerchant();
+      getOffers();
+      getToken();
+      getdata();
+      getPoint();
+      getLatestOrder();
+      getUnSeenNotifications();
+      getLanguageCode();
+    } catch (e) {}
+
     Future.delayed(const Duration(seconds: 7)).then((value) {
       Navigator.pushAndRemoveUntil(
         context,
